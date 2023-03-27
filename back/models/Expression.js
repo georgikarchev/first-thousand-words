@@ -22,10 +22,10 @@ const expressionSchema = new mongoose.Schema({
     type: String,
     maxLength: [160, "Notes can be no longer that 160 characters"],
   },
-  creator: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
-  },
+  // creator: {
+  //   type: mongoose.Types.ObjectId,
+  //   ref: "User",
+  // },
   created: {
     type: Date,
     required: true,
