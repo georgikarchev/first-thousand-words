@@ -2,8 +2,12 @@ const router = require("express").Router();
 
 const wordController = require("./controllers/wordController");
 
-router.use("/words", wordController);
-
+// *** WORDS ***
+router.get("/words", wordController.getMany);
+router.get("/words/:id", wordController.getOne);
+router.post("/words", wordController.createOne);
+router.put("/words/:id", wordController.updateOne);
+router.delete("/words/:id", wordController.deleteOne);
 
 // custom 404
 router.use("/404", (req, res, next) => {

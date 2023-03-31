@@ -7,7 +7,7 @@ const wordSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    default: 'noun',
+    default: "noun",
     enum: ["noun", "verb", "adjective", "adverb", "punctuation"],
   },
   isPlural: {

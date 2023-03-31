@@ -20,4 +20,6 @@ app.use(routes);
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb://localhost:27017/first-thousand-words');
 
-app.listen(3030, () => console.log('App run on 3030'));
+app.listen(3040, () => console.log('Server listening on on 3040...'));
+
+module.exports = app;

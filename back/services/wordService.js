@@ -1,6 +1,8 @@
-const User = require("../models/User");
 const Word = require("../models/Word");
-const { removeEmptyAttributes } = require("../utils/jsUtils");
+const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
+const { isValidMongoId } = require("../utils/validators");
+
+const expressionService = require("./expressionService");
 
 exports.getMany = async (query) => {
   let qry = {};
@@ -45,6 +47,10 @@ exports.getMany = async (query) => {
 };
 
 exports.getById = async (id) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid word id");
+  }
+
   const word = await Word.findById(id).lean();
 
   if (!word) {
@@ -57,133 +63,72 @@ exports.getById = async (id) => {
 exports.create = async (data) => {
   const { word, type, isPlural, published, description, notes } = data;
 
-  const existingCreator = await User.findById(req.user._id);
-
-  if (!existingCreator) {
-    throw new Error("Creator does not exist");
-  }
-
   const newWord = removeEmptyAttributes(data);
   newWord.created = new Date();
 
   return await Word.create(newWord);
 };
 
-exports.delete = async (id) => {
+exports.update = async (id, data) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid word id");
+  }
+
+  const word = await Word.findById(id);
+
+  if (!word) {
+    throw new Error("Word does not exist");
+  }
+
+  const newData = removeEmptyAttributes(data);
+
+  if (newData.word) {
+    word.word = newData.word;
+  }
+
+  if (newData.type) {
+    word.type = newData.type;
+  }
+
+  if (newData.isPlural) {
+    word.isPlural = newData.isPlural;
+  }
+
+  if (newData.published) {
+    word.published = newData.published;
+  }
+
+  if (newData.description) {
+    word.description = newData.description;
+  }
+
+  if (newData.notes) {
+    word.notes = newData.notes;
+  }
+
+  if (!isEmpty(newData)) {
+    word.modified = new Date();
+    return await word.save();
+  }
+
+  throw new Error("Bad input");
+};
+
+exports.deleteOne = async (id) => {
   // 1. check if word exists
   const word = await Word.findById(id);
 
   if (!word) {
-    throw new Error("Word does not exist.");
+    throw new Error("Word does not exist");
   }
 
   // 2. check if word is used in Expressions, Dialogs and Texts
   // TODO: check if word is used in Expressions, Dialogs and Texts - if Yes - Output Error "Cant't delete."
+  const expressionsWithThatWord = await expressionService.findExpressionsWithWord(id);
+  
   if (true) {
     throw new Error("Word can't be deleted because it is being used.");
   }
 
-  word.remove().exec();
-
-  return word;
-};
-
-exports.updateWord = async (id, value) => {
-  const word = await Word.findById(id);
-
-  if (!word) {
-    throw new Error("Word does not exist");
-  }
-
-  if (word.word !== value) {
-    word.word = value;
-    word.modified = new Date();
-    await word.save();
-  }
-
-  return word.lean();
-};
-
-exports.updateType = async (id, type) => {
-  const word = await Word.findById(id);
-
-  if (!word) {
-    throw new Error("Word does not exist");
-  }
-
-  if (word.type !== type) {
-    word.type = type;
-    word.modified = new Date();
-    await word.save();
-  }
-
-  return word.lean();
-};
-
-exports.updateIsPlural = async (id, isPlural) => {
-  if(typeof isPlural == "boolean") {
-    throw new Error ("New value must be boolean");
-  }
-
-  const word = await Word.findById(id);
-
-  if (!word) {
-    throw new Error("Word does not exist");
-  }
-
-  if (word.isPlural !== isPlural) {
-    word.isPlural = isPlural;
-    word.modified = new Date();
-    await word.save();
-  }
-
-  return word.lean();
-};
-
-exports.updatePublished = async (id, published) => {
-  const word = await Word.findById(id);
-
-  if (!word) {
-    throw new Error("Word does not exist");
-  }
-
-  if (word.published !== published) {
-    word.published = published;
-    word.modified = new Date();
-    await word.save();
-  }
-
-  return word.lean();
-};
-
-exports.updateDescription = async (id, value) => {
-  const word = await Word.findById(id);
-
-  if (!word) {
-    throw new Error("Word does not exist");
-  }
-
-  if (word.description !== value) {
-    word.description = value;
-    word.modified = new Date();
-    await word.save();
-  }
-
-  return word.lean();
-};
-
-exports.updateNotes = async (id, value) => {
-  const word = await Word.findById(id);
-
-  if (!word) {
-    throw new Error("Word does not exist");
-  }
-
-  if (word.notes !== value) {
-    word.notes = value;
-    word.modified = new Date();
-    await word.save();
-  }
-
-  return word.lean();
+  return await Word.findByIdAndDelete(id);
 };

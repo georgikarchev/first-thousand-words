@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const expressionSchema = new mongoose.Schema({
   type: {
     type: String,
-    required: [true, "Type is required"],
+    default: "declarative",
     enum: ["declarative", "exclamatory", "interrogative", "imperative"],
   },
   words: {
