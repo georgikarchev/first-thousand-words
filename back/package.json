@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon",
-    "test": "mocha ./tests/words.spec.js",
+    "test": "mocha ./tests/integration.spec.js",
     "test:watch": "mocha --watch ./tests/*.spec.js"
   },
   "keywords": [],
