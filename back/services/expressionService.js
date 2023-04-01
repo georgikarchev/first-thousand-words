@@ -61,11 +61,10 @@ exports.create = async (data, type) => {
 
   const existingExpression = await Expression.find({ words: words });
 
-  if (existingExpression) {
+  if (existingExpression && existingExpression.length) {
     // Expression already exists - return existing expression
     return existingExpression;
   }
-
   const newExpression = { words: words };
   if (type != null) {
     newExpression.type = type;
@@ -103,107 +102,6 @@ exports.findExpressionsWithWord = async (wordId) => {
   }
 
   const expressions = await Expression.find({words: wordId});
-  console.log(expressions);
   
   return expressions;
 };
-
-// exports.updateExpression = async (id, value) => {
-//   const word = await Expression.findById(id);
-
-//   if (!word) {
-//     throw new Error("Expression does not exist");
-//   }
-
-//   if (word.word !== value) {
-//     word.word = value;
-//     word.modified = new Date();
-//     await word.save();
-//   }
-
-//   return word.lean();
-// };
-
-// exports.updateType = async (id, type) => {
-//   const word = await Expression.findById(id);
-
-//   if (!word) {
-//     throw new Error("Expression does not exist");
-//   }
-
-//   if (word.type !== type) {
-//     word.type = type;
-//     word.modified = new Date();
-//     await word.save();
-//   }
-
-//   return word.lean();
-// };
-
-// exports.updateIsPlural = async (id, isPlural) => {
-//   if (typeof isPlural == "boolean") {
-//     throw new Error("New value must be boolean");
-//   }
-
-//   const word = await Expression.findById(id);
-
-//   if (!word) {
-//     throw new Error("Expression does not exist");
-//   }
-
-//   if (word.isPlural !== isPlural) {
-//     word.isPlural = isPlural;
-//     word.modified = new Date();
-//     await word.save();
-//   }
-
-//   return word.lean();
-// };
-
-// exports.updatePublished = async (id, published) => {
-//   const word = await Expression.findById(id);
-
-//   if (!word) {
-//     throw new Error("Expression does not exist");
-//   }
-
-//   if (word.published !== published) {
-//     word.published = published;
-//     word.modified = new Date();
-//     await word.save();
-//   }
-
-//   return word.lean();
-// };
-
-// exports.updateDescription = async (id, value) => {
-//   const word = await Expression.findById(id);
-
-//   if (!word) {
-//     throw new Error("Expression does not exist");
-//   }
-
-//   if (word.description !== value) {
-//     word.description = value;
-//     word.modified = new Date();
-//     await word.save();
-//   }
-
-//   return word.lean();
-// };
-
-// exports.updateNotes = async (id, value) => {
-//   const word = await Expression.findById(id);
-
-//   if (!word) {
-//     throw new Error("Expression does not exist");
-//   }
-
-//   if (word.notes !== value) {
-//     word.notes = value;
-//     word.modified = new Date();
-//     await word.save();
-//   }
-
-//   return word.lean();
-// };
