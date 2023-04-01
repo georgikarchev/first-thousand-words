@@ -9,6 +9,7 @@ const expressionSchema = new mongoose.Schema({
   words: {
     type: [mongoose.Types.ObjectId],
     ref: "Word",
+    required: true,
   },
   published: {
     type: Boolean,
