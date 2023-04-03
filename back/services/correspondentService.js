@@ -124,12 +124,12 @@ exports.deleteOne = async (id) => {
   }
 
   // 2. Check if correspondent is used in a dialogue
-  // const dialoguesWithThatCorrespondent = await Dialogue.find({
-  //   expressions: { correspondent: id },
-  // }).lean();
-  // if (dialoguesWithThatCorrespondent.length !== 0) {
-  //   throw new Error("Word can't be deleted because it is being used.");
-  // }
+  const dialoguesWithThatCorrespondent = await Dialogue.find({
+    expressions: { correspondent: id },
+  }).lean();
+  if (dialoguesWithThatCorrespondent.length !== 0) {
+    throw new Error("Correspondent can't be deleted because it is being used.");
+  }
 
   return await Correspondent.findByIdAndDelete(id).lean();
 };
