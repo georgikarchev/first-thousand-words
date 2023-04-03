@@ -6,6 +6,10 @@ const expressionSchema = new mongoose.Schema({
     default: "declarative",
     enum: ["declarative", "exclamatory", "interrogative", "imperative"],
   },
+  language: {
+    type: String,
+    default: "english",
+  },
   words: {
     type: [mongoose.Types.ObjectId],
     ref: "Word",
