@@ -2,7 +2,6 @@ const wordService = require("../services/wordService");
 const { DEFAULT_DB_FETCH_LIMIT } = require("../constants");
 
 const { getErrorMessage } = require("../utils/errorUtils");
-const { removeEmptyAttributes } = require("../utils/jsUtils");
 
 exports.getMany = async (req, res) => {
   const query = { ...req.query };
@@ -49,6 +48,7 @@ exports.createOne = async (req, res) => {
 exports.deleteOne = async (req, res) => {
   const id = req.params.id;
 
+  
   try {
     const result = await wordService.deleteOne(id);
 
