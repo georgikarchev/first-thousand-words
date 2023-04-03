@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const textSchema = new mongoose.Schema({
+  language: {
+    type: String,
+    default: "english",
+  },
   expressions: [
     {
       expression: {
