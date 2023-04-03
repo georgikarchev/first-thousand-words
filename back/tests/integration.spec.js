@@ -769,6 +769,39 @@ describe("API unit and integration tests", () => {
     });
   });
 
+  /*
+   * Correspondents - Delete
+   */
+  describe("/correspondents DELETE", () => {
+    it("DELETE one correspondent", (done) => {
+      chai
+        .request(server)
+        .delete(`/correspondents/${firstCorrespondentId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.should.be.eq(firstCorrespondentId);
+          done();
+        });
+    });
+
+    it("READ correspondents - One results.", (done) => {
+      chai
+        .request(server)
+        .get("/correspondents")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(1);
+          firstCorrespondentId = res.body.data[0]._id;
+          firstCorrespondentId.length.should.be.eq(24);
+          done();
+        });
+    });
+  });
+
 
 
 });
