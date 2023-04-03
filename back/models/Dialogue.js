@@ -13,7 +13,7 @@ const dialogSchema = new mongoose.Schema({
       },
       character: {
         type: mongoose.Types.ObjectId,
-        ref: "Character",
+        ref: "Correspondent",
       },
     },
   ],
