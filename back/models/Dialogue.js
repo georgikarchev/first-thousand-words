@@ -11,7 +11,7 @@ const dialogSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Expression",
       },
-      character: {
+      correspondent: {
         type: mongoose.Types.ObjectId,
         ref: "Correspondent",
       },
