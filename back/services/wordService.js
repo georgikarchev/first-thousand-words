@@ -1,4 +1,5 @@
 const Word = require("../models/Word");
+const Expression = require("../models/Expression");
 const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
 const { isValidMongoId } = require("../utils/validators");
 
@@ -86,6 +87,10 @@ exports.update = async (id, data) => {
     word.word = newData.word;
   }
 
+  if (newData.language) {
+    word.language = newData.language;
+  }
+
   if (newData.type) {
     word.type = newData.type;
   }
@@ -124,9 +129,15 @@ exports.deleteOne = async (id) => {
 
   // 2. check if word is used in Expressions, Dialogs and Texts
   // TODO: check if word is used in Expressions, Dialogs and Texts - if Yes - Output Error "Cant't delete."
-  const expressionsWithThatWord = await expressionService.findExpressionsWithWord(id);
-  
-  if (true) {
+  // const expressionsWithThatWord = await expressionService.findExpressionsWithWord(id);
+
+  // if (expressionsWithThatWord) {
+  //   console.log('---->tuk', expressionsWithThatWord);
+  //   throw new Error("Word can't be deleted because it is being used.");
+  // }
+
+  const expressionsWithThatWord = await Expression.find({ words: id }).lean();
+  if (expressionsWithThatWord.length !== 0) {
     throw new Error("Word can't be deleted because it is being used.");
   }
 

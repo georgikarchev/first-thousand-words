@@ -5,6 +5,10 @@ const wordSchema = new mongoose.Schema({
     type: String,
     required: [true, "Word is required"],
   },
+  language: {
+    type: String,
+    default: "english",
+  },
   type: {
     type: String,
     default: "noun",
