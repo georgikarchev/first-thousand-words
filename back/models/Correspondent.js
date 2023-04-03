@@ -15,8 +15,12 @@ const correspondentSchema = new mongoose.Schema({
     default: "female",
   },
   language: {
-    type: String,
-    default: "english",
+    type: [String],
+    default: ["english"],
+  },
+  published: {
+    type: Boolean,
+    default: true,
   },
   description: {
     type: String,
