@@ -1,8 +1,8 @@
 const Expression = require("../models/Expression");
 const Text = require("../models/Text");
-const { removeEmptyAttributes } = require("../utils/jsUtils");
-const { isValidMongoId } = require("../utils/validators");
 const Dialog = require("../models/Dialogue");
+const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
+const { isValidMongoId } = require("../utils/validators");
 
 exports.getMany = async (query) => {
   let qry = {};
@@ -47,6 +47,10 @@ exports.getMany = async (query) => {
 };
 
 exports.getById = async (id) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid expression id");
+  }
+
   const expression = await Expression.findById(id).lean();
 
   if (!expression) {
@@ -74,26 +78,69 @@ exports.create = async (data, type) => {
   return await Expression.create(newExpression);
 };
 
-exports.delete = async (id) => {
+exports.update = async (id, data) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid expression id");
+  }
+  
+  const expression = await Expression.findById(id);
+  
+  if (!expression) {
+    throw new Error("Expression does not exist");
+  }
+  
+  const newData = removeEmptyAttributes(data);
+
+  if (newData.words) {
+    expression.words = newData.words;
+  }
+
+  if (newData.language) {
+    expression.language = newData.language;
+  }
+
+  if (newData.type) {
+    expression.type = newData.type;
+  }
+
+  if (newData.published) {
+    expression.published = newData.published;
+  }
+
+  if (newData.description) {
+    expression.description = newData.description;
+  }
+
+  if (newData.notes) {
+    expression.notes = newData.notes;
+  }
+
+  if (!isEmpty(newData)) {
+    expression.modified = new Date();
+    return await expression.save();
+  }
+
+  throw new Error("Bad input");
+};
+
+exports.deleteOne = async (id) => {
   // 1. check if expression exists
   const expression = await Expression.findById(id);
-
+  
   if (!expression) {
     throw new Error("Expression does not exist.");
   }
 
   // 2. check if expression is used in Dialogs and Texts
   // TODO: check if expression is used in Dialogs and Texts - if Yes - Output Error "Cant't delete."
-  let isInUse = Text.find({"expressions": { expression: id }});
-  isInUse ??= Dialog.find({"expressions": { expression: id }});
+  let isInUse = await Text.find({"expressions": { expression: id }});
+  isInUse = isInUse.length !== 0 ? await Dialog.find({"expressions": { expression: id }}) : false;
 
-  if (isInUse) {
+  if (isInUse.length === 0) {
     throw new Error("Expression can't be deleted because it is being used.");
   }
 
-  word.remove().exec();
-
-  return word;
+  return await Expression.findByIdAndDelete(id).lean();
 };
 
 exports.findExpressionsWithWord = async (wordId) => {
