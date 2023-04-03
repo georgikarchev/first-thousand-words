@@ -2,6 +2,8 @@ const router = require("express").Router();
 
 const wordController = require("./controllers/wordController");
 const expressionController = require("./controllers/expressionController");
+const correspondentController = require("./controllers/correspondentController");
+const dialogueController = require("./controllers/dialogueController");
 
 // *** WORDS ***
 router.get("/words", wordController.getMany);
@@ -16,6 +18,13 @@ router.get("/expressions/:id", expressionController.getOne);
 router.post("/expressions", expressionController.createOne);
 router.put("/expressions/:id", expressionController.updateOne);
 router.delete("/expressions/:id", expressionController.deleteOne);
+
+// *** Correspondent ***
+router.get("/correspondents", correspondentController.getMany);
+router.get("/correspondents/:id", correspondentController.getOne);
+router.post("/correspondents", correspondentController.createOne);
+router.put("/correspondents/:id", correspondentController.updateOne);
+router.delete("/correspondents/:id", correspondentController.deleteOne);
 
 // *** Dialogs ***
 router.get("/dialogues", dialogueController.getMany);
