@@ -1,26 +1,19 @@
 const mongoose = require("mongoose");
 
 const dialogSchema = new mongoose.Schema({
-  participants: [
-    {
-      type: String,
-      required: [true, "Participants is required"],
-    }
-  ],
+  language: {
+    type: String,
+    default: "english",
+  },
   expressions: [
     {
       expression: {
         type: mongoose.Types.ObjectId,
         ref: "Expression",
       },
-      participant: {
-        type: String,
-        validate: [
-          function (value) {
-            return this.participants && this.participants.indexOf(value) !== -1;
-          },
-          "Participant does not exist."
-        ],
+      character: {
+        type: mongoose.Types.ObjectId,
+        ref: "Character",
       },
     },
   ],
