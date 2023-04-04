@@ -26,7 +26,7 @@ router.post("/correspondents", correspondentController.createOne);
 router.put("/correspondents/:id", correspondentController.updateOne);
 router.delete("/correspondents/:id", correspondentController.deleteOne);
 
-// *** Dialogs ***
+// *** Dialogues ***
 router.get("/dialogues", dialogueController.getMany);
 router.get("/dialogues/:id", dialogueController.getOne);
 router.post("/dialogues", dialogueController.createOne);
