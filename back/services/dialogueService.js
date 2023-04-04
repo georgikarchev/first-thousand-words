@@ -3,6 +3,7 @@ const Text = require("../models/Text");
 const Dialogue = require("../models/Dialogue");
 const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
 const { isValidMongoId } = require("../utils/validators");
+const { default: mongoose } = require("mongoose");
 
 exports.getMany = async (query) => {
   let qry = {};
@@ -64,9 +65,22 @@ exports.create = async (data, type) => {
   const { expressions } = data;
 
   const newDialogue = { expressions: expressions };
-  if (type != null) {
-    newDialogue.type = type;
+  
+  if(!expressions.length > 0) {
+    throw new Error("Bad input");
   }
+
+  expressions.forEach(e => {
+    if(!e.expression) { //|| typeof e.expression !== mongoose.Types.ObjectId
+      throw new Error("Bad input");
+    }
+
+    if(!e.correspondent) { //|| typeof e.correspondent !== mongoose.Types.ObjectId
+      throw new Error("Bad input");
+    }
+  });
+
+
   newDialogue.created = new Date();
 
   return await Dialogue.create(newDialogue);
@@ -90,6 +104,17 @@ exports.update = async (id, data) => {
   }
 
   if (newData.expressions) {
+
+    newData.expressions.forEach(e => {
+      if(!e.expression) { //|| typeof e.expression !== mongoose.Types.ObjectId
+        throw new Error("Bad input");
+      }
+  
+      if(!e.correspondent) { //|| typeof e.correspondent !== mongoose.Types.ObjectId
+        throw new Error("Bad input");
+      }
+    });
+
     dialogue.expressions = newData.expressions;
   }
 

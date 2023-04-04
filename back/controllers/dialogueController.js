@@ -1,4 +1,4 @@
-const expressionService = require("../services/expressionService");
+const dialogueService = require("../services/dialogueService");
 const { DEFAULT_DB_FETCH_LIMIT } = require("../constants");
 
 const { getErrorMessage } = require("../utils/errorUtils");
@@ -11,7 +11,7 @@ exports.getMany = async (req, res) => {
   query.orderBy = query.orderBy ? query.orderBy : "asc";
 
   try {
-    const result = await expressionService.getMany(query);
+    const result = await dialogueService.getMany(query);
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error: getErrorMessage(error) });
@@ -22,7 +22,7 @@ exports.getOne = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const result = await expressionService.getById(id);
+    const result = await dialogueService.getById(id);
     res.status(200).json(result);
   } catch (error) {
     res.status(404).json({ error: getErrorMessage(error) });
@@ -37,7 +37,7 @@ exports.createOne = async (req, res) => {
       throw new Error("Bad input");
     }
 
-    const result = await expressionService.create({expressions});
+    const result = await dialogueService.create({expressions});
 
     res.status(201).json(result);
   } catch (error) {
@@ -49,7 +49,7 @@ exports.deleteOne = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const result = await expressionService.deleteOne(id);
+    const result = await dialogueService.deleteOne(id);
 
     res.status(200).json(result);
   } catch (error) {
@@ -60,7 +60,7 @@ exports.deleteOne = async (req, res) => {
 exports.updateOne = async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await expressionService.update(id, req.body);
+    const result = await dialogueService.update(id, req.body);
 
     res.status(201).json(result);
   } catch (error) {
