@@ -45,6 +45,8 @@ describe("API unit and integration tests", () => {
   let firstWordId, secondWordId;
   let firstExpressionId, secondExpressionId;
   let firstCorrespondentId, secondCorrespondentId;
+  let firstDialogueId, secondDialogueId;
+
 
   /*
    * Words
@@ -153,6 +155,7 @@ describe("API unit and integration tests", () => {
           res.body.should.be.a("object");
           res.body._id.should.be.a("string");
           res.body._id.length.should.be.eq(24);
+          res.body._id.should.be.eq(firstWordId);
           done();
         });
     });
@@ -473,6 +476,7 @@ describe("API unit and integration tests", () => {
           res.body.should.be.a("object");
           res.body._id.should.be.a("string");
           res.body._id.length.should.be.eq(24);
+          res.body._id.should.be.eq(firstCorrespondentId);
           done();
         });
     });
@@ -555,159 +559,209 @@ describe("API unit and integration tests", () => {
   /*
    * Dialogs
    */
-  // describe("/dialogues Create Read Update (CRU)", () => {
-  //   it("READ dialogue - No results.", (done) => {
-  //     chai
-  //       .request(server)
-  //       .get("/dialogues")
-  //       .end((err, res) => {
-  //         res.should.have.status(200);
-  //         res.body.should.be.a("object");
-  //         res.body.data.should.be.a("array");
-  //         res.body.data.length.should.be.eql(0);
-  //         done();
-  //       });
-  //   });
+  describe("/dialogues Create Read Update (CRU)", () => {
+    it("READ dialogue - No results.", (done) => {
+      chai
+        .request(server)
+        .get("/dialogues")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(0);
+          done();
+        });
+    });
 
 
-  //   it("CREATE a dialogue with the first found expression & first found character", (done) => {
-  //     chai
-  //       .request(server)
-  //       .post("/dialogues")
-  //       .send({
-  //         expressions: [firstWordId],
-  //       })
-  //       .end((err, res) => {
-  //         res.should.have.status(201);
-  //         res.body.should.be.a("object");
-  //         res.body.words.should.be.a("array");
-  //         res.body.type.should.be.eql("declarative");
-  //         res.body._id.should.be.a("string");
-  //         res.body._id.length.should.be.eq(24);
-  //         done();
-  //       });
-  //   });
+    it("CREATE a dialogue with the first found expression & first found correspondent", (done) => {
+      chai
+        .request(server)
+        .post("/dialogues")
+        .send({
+          expressions: [{
+            expression: firstExpressionId,
+            correspondent: firstCorrespondentId
+          }],
+        })
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          res.body.expressions.should.be.a("array");
+          res.body.language.should.be.eql("english");
+          res.body.published.should.be.eql(false);
+          should.not.exist(res.body.description);
+          should.not.exist(res.body.notes);
+          should.not.exist(res.body.modified);
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          done();
+        });
+    });
 
 
-    // it("CREATE 2nd dialogue with the 2nd found word", (done) => {
-    //   chai
-    //     .request(server)
-    //     .post("/dialogues")
-    //     .send({
-    //       words: [secondWordId],
-    //     })
-    //     .end((err, res) => {
-    //       res.should.have.status(201);
-    //       res.body.should.be.a("object");
-    //       res.body.words.should.be.a("array");
-    //       res.body.type.should.be.eql("declarative");
-    //       res.body._id.should.be.a("string");
-    //       res.body._id.length.should.be.eq(24);
-    //       done();
-    //     });
-    // });
+    it("CREATE 2nd dialogue with the 2nd found word", (done) => {
+      chai
+        .request(server)
+        .post("/dialogues")
+        .send({
+          expressions: [{
+            expression: secondExpressionId,
+            correspondent: secondCorrespondentId
+          }],
+        })
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          res.body.expressions.should.be.a("array");
+          res.body.language.should.be.eql("english");
+          res.body.published.should.be.eql(false);
+          should.not.exist(res.body.description);
+          should.not.exist(res.body.notes);
+          should.not.exist(res.body.modified);
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          done();
+        });
+    });
 
 
-    // it("READ dialogues - Two results.", (done) => {
-    //   chai
-    //     .request(server)
-    //     .get("/dialogues")
-    //     .end((err, res) => {
-    //       res.should.have.status(200);
-    //       res.body.should.be.a("object");
-    //       res.body.data.should.be.a("array");
-    //       res.body.data.length.should.be.eql(2);
+    it("READ dialogues - Two results.", (done) => {
+      chai
+        .request(server)
+        .get("/dialogues")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(2);
 
-    //       firstDialogId = res.body.data[0]._id;
-    //       secondDialogId = res.body.data[1]._id;
+          firstDialogueId = res.body.data[0]._id;
+          secondDialogueId = res.body.data[1]._id;
 
-    //       firstDialogId.length.should.be.eq(24);
-    //       secondDialogId.length.should.be.eq(24);
+          firstDialogueId.length.should.be.eq(24);
+          secondDialogueId.length.should.be.eq(24);
 
-    //       done();
-    //     });
-    // });
+          done();
+        });
+    });
 
-    // it("READ single dialogue", (done) => {
-    //   chai
-    //     .request(server)
-    //     .get(`/dialogues/${firstDialogId}`)
-    //     .end((err, res) => {
-    //       res.should.have.status(200);
-    //       res.body.should.be.a("object");
-    //       res.body._id.should.be.a("string");
-    //       res.body._id.length.should.be.eq(24);
-    //       done();
-    //     });
-    // });
+    it("READ single dialogue", (done) => {
+      chai
+        .request(server)
+        .get(`/dialogues/${firstDialogueId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          res.body._id.should.be.eq(firstDialogueId);
+          done();
+        });
+    });
 
-    // it("READ single dialogue - FAIL: Invalid dialogue id", (done) => {
-    //   chai
-    //     .request(server)
-    //     .get(`/dialogues/AAA57b593c224c77a986569`)
-    //     .end((err, res) => {
-    //       res.should.have.status(404);
-    //       res.body.should.be.a("object");
-    //       res.body.error.should.be.a("string");
-    //       res.body.error.should.be.eql("Invalid dialogue id");
-    //       done();
-    //     });
-    // });
+    it("READ single dialogue - FAIL: Invalid dialogue id", (done) => {
+      chai
+        .request(server)
+        .get(`/dialogues/AAA57b593c224c77a986569`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid dialogue id");
+          done();
+        });
+    });
 
-    // it("UPDATE dialogue - FAIL - Bad input", (done) => {
-    //   chai
-    //     .request(server)
-    //     .put(`/dialogues/${firstDialogId}`)
-    //     .send({})
-    //     .end((err, res) => {
-    //       res.should.have.status(400);
-    //       res.body.should.be.a("object");
-    //       res.body.error.should.be.a("string");
-    //       res.body.error.should.be.eql("Bad input");
-    //       done();
-    //     });
-    // });
+    it("UPDATE dialogue - FAIL - Bad input", (done) => {
+      chai
+        .request(server)
+        .put(`/dialogues/${firstDialogueId}`)
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Bad input");
+          done();
+        });
+    });
 
-    // it("UPDATE dialogues - FAIL - dialogues does not exist", (done) => {
-    //   chai
-    //     .request(server)
-    //     .put(`/dialogues/14257b593c224c77a9865698`)
-    //     .send({})
-    //     .end((err, res) => {
-    //       res.should.have.status(400);
-    //       res.body.should.be.a("object");
-    //       res.body.error.should.be.a("string");
-    //       res.body.error.should.be.eql("Dialog does not exist");
-    //       done();
-    //     });
-    // });
+    it("UPDATE dialogue - FAIL 2 - Bad input", (done) => {
+      chai
+        .request(server)
+        .put(`/dialogues/${firstDialogueId}`)
+        .send({
+          expressions: [{
+            expression: secondExpressionId
+          }],
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Bad input");
+          done();
+        });
+    });
 
-    // it("UPDATE dialogue - SUCCESS", (done) => {
-    //   chai
-    //     .request(server)
-    //     .put(`/dialogues/${firstDialogId}`)
-    //     .send({
-    //       expressions: [firstExpressionId, secondExpressionId],
-    //       type: "imperative",
-    //       published: "false",
-    //       description: "updated test description",
-    //       notes: "updated test notes",
-    //     })
-    //     .end((err, res) => {
-    //       // console.log(res.body);
+    it("UPDATE dialogues - FAIL - dialogues does not exist", (done) => {
+      chai
+        .request(server)
+        .put(`/dialogues/14257b593c224c77a9865698`)
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Dialogue does not exist");
+          done();
+        });
+    });
 
-    //       res.should.have.status(201);
-    //       res.body.should.be.a("object");
-    //       res.body.words.should.be.eql([firstWordId, secondWordId]);
-    //       res.body.type.should.be.eql("imperative");
-    //       res.body.published.should.be.eql(false);
-    //       res.body.description.should.be.eql("updated test description");
-    //       res.body.notes.should.be.eql("updated test notes");
-    //       res.body._id.should.be.a("string");
-    //       res.body._id.length.should.be.eq(24);
-    //       done();
-    //     });
-    // });
+    it("UPDATE dialogue - SUCCESS", (done) => {
+      const newExpressions = [
+        {
+          expression: firstExpressionId,
+          correspondent: firstCorrespondentId
+        },
+        {
+          expression: secondExpressionId,
+          correspondent: secondCorrespondentId
+        }
+      ];
+
+      chai
+        .request(server)
+        .put(`/dialogues/${firstDialogueId}`)
+        .send({
+          expressions: newExpressions,
+          language: "german",
+          published: "true",
+          description: "updated test description",
+          notes: "updated test notes",
+        })
+        .end((err, res) => {
+          // console.log(res.body);
+
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          res.body.expressions[0].expression.should.be.eql(firstExpressionId);
+          res.body.expressions[0].correspondent.should.be.eql(firstCorrespondentId);
+          res.body.expressions[1].expression.should.be.eql(secondExpressionId);
+          res.body.expressions[1].correspondent.should.be.eql(secondCorrespondentId);
+          res.body.language.should.be.eql("german");
+          res.body.published.should.be.eql(true);
+          res.body.description.should.be.eql("updated test description");
+          res.body.notes.should.be.eql("updated test notes");
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          res.body._id.should.be.eq(firstDialogueId);
+          done();
+        });
+    });
+  
+  });
   
 
   /*
