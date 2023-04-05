@@ -116,11 +116,15 @@ exports.update = async (id, data) => {
 };
 
 exports.deleteOne = async (id) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid correspondent id");
+  }
+
   // 1. check if dialogue exists
   const dialogue = await Correspondent.findById(id);
 
   if (!dialogue) {
-    throw new Error("Correspondent does not exist.");
+    throw new Error("Correspondent does not exist");
   }
 
   // 2. Check if correspondent is used in a dialogue
@@ -128,7 +132,7 @@ exports.deleteOne = async (id) => {
     expressions: { correspondent: id },
   }).lean();
   if (dialoguesWithThatCorrespondent.length !== 0) {
-    throw new Error("Correspondent can't be deleted because it is being used.");
+    throw new Error("Correspondent can't be deleted because it is being used");
   }
 
   return await Correspondent.findByIdAndDelete(id).lean();

@@ -165,7 +165,7 @@ describe("API unit and integration tests", () => {
         .request(server)
         .get(`/words/AAA57b593c224c77a986569`)
         .end((err, res) => {
-          res.should.have.status(404);
+          res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.error.should.be.a("string");
           res.body.error.should.be.eql("Invalid word id");
@@ -173,7 +173,20 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE word - FAIL - Bad input", (done) => {
+    it("READ single word - FAIL: Word does not exist", (done) => {
+      chai
+        .request(server)
+        .get(`/words/652c1ba5f75450cbcaecebdb`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Word does not exist");
+          done();
+        });
+    });
+
+    it("UPDATE word - FAIL: Bad input", (done) => {
       chai
         .request(server)
         .put(`/words/${firstWordId}`)
@@ -187,7 +200,21 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE word - FAIL - Word does not exist", (done) => {
+    it("UPDATE word - FAIL: Invalid word id", (done) => {
+      chai
+        .request(server)
+        .put(`/words/AAA57b593c224c77a986569`)
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid word id");
+          done();
+        });
+    });
+
+    it("UPDATE word - FAIL: Word does not exist", (done) => {
       chai
         .request(server)
         .put(`/words/14257b593c224c77a9865698`)
@@ -323,7 +350,7 @@ describe("API unit and integration tests", () => {
         .request(server)
         .get(`/expressions/AAA57b593c224c77a986569`)
         .end((err, res) => {
-          res.should.have.status(404);
+          res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.error.should.be.a("string");
           res.body.error.should.be.eql("Invalid expression id");
@@ -331,7 +358,20 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE expression - FAIL - Bad input", (done) => {
+    it("READ single expression - FAIL: Expression does not exist", (done) => {
+      chai
+        .request(server)
+        .get(`/expressions/14257b593c224c77a9865698`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Expression does not exist");
+          done();
+        });
+    });
+
+    it("UPDATE expression - FAIL: Bad input", (done) => {
       chai
         .request(server)
         .put(`/expressions/${firstExpressionId}`)
@@ -345,7 +385,21 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE expressions - FAIL - expressions does not exist", (done) => {
+    it("UPDATE expressions - FAIL: Invalid expression id", (done) => {
+      chai
+        .request(server)
+        .put(`/expressions/AAA57b593c224c77a986569`)
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid expression id");
+          done();
+        });
+    });
+    
+    it("UPDATE expressions - FAIL: Expression does not exist", (done) => {
       chai
         .request(server)
         .put(`/expressions/14257b593c224c77a9865698`)
@@ -486,7 +540,7 @@ describe("API unit and integration tests", () => {
         .request(server)
         .get(`/correspondents/AAA57b593c224c77a986569`)
         .end((err, res) => {
-          res.should.have.status(404);
+          res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.error.should.be.a("string");
           res.body.error.should.be.eql("Invalid correspondent id");
@@ -494,7 +548,7 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE correspondent - FAIL - Bad input", (done) => {
+    it("UPDATE correspondent - FAIL: Bad input", (done) => {
       chai
         .request(server)
         .put(`/correspondents/${firstCorrespondentId}`)
@@ -508,7 +562,7 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE correspondents - FAIL - correspondents does not exist", (done) => {
+    it("UPDATE correspondents - FAIL: correspondents does not exist", (done) => {
       chai
         .request(server)
         .put(`/correspondents/14257b593c224c77a9865698`)
@@ -573,7 +627,6 @@ describe("API unit and integration tests", () => {
         });
     });
 
-
     it("CREATE a dialogue with the first found expression & first found correspondent", (done) => {
       chai
         .request(server)
@@ -599,7 +652,6 @@ describe("API unit and integration tests", () => {
         });
     });
 
-
     it("CREATE 2nd dialogue with the 2nd found word", (done) => {
       chai
         .request(server)
@@ -624,7 +676,6 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-
 
     it("READ dialogues - Two results.", (done) => {
       chai
@@ -665,7 +716,7 @@ describe("API unit and integration tests", () => {
         .request(server)
         .get(`/dialogues/AAA57b593c224c77a986569`)
         .end((err, res) => {
-          res.should.have.status(404);
+          res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.error.should.be.a("string");
           res.body.error.should.be.eql("Invalid dialogue id");
@@ -673,7 +724,7 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE dialogue - FAIL - Bad input", (done) => {
+    it("UPDATE dialogue - FAIL: Bad input", (done) => {
       chai
         .request(server)
         .put(`/dialogues/${firstDialogueId}`)
@@ -705,7 +756,7 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("UPDATE dialogues - FAIL - dialogues does not exist", (done) => {
+    it("UPDATE dialogues - FAIL: dialogues does not exist", (done) => {
       chai
         .request(server)
         .put(`/dialogues/14257b593c224c77a9865698`)
@@ -762,6 +813,24 @@ describe("API unit and integration tests", () => {
     });
   
   });
+
+  /*
+   * Words, Correspondents, Expressions - Delete FAIL: Being used
+   */
+  describe("/words, /correspondents, /expressions Words, Correspondents, Expressions - Delete FAIL: Being used", () => {
+    it("DELETE one Expression - FAIL: Expression does not exist", (done) => {
+      chai
+        .request(server)
+        .delete(`/expressions/${firstExpressionId}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Being used");
+          done();
+        });
+    });
+  });
   
 
   /*
@@ -771,11 +840,95 @@ describe("API unit and integration tests", () => {
   /*
    * Dialogs - Delete
    */
+  describe("/dialogues DELETE", () => {
+    it("DELETE one dialogue - FAIL: Invalid dialogue id", (done) => {
+      chai
+        .request(server)
+        .delete(`/dialogues/AAA57b593c224c77a986569`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid dialogue id");
+          done();
+        });
+    });
+
+    it("DELETE one dialogue - FAIL: Dialogue does not exist.", (done) => {
+      chai
+        .request(server)
+        .delete(`/dialogues/652c1ba5f75450cbcaecebdb`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Dialogue does not exist.");
+          done();
+        });
+    });
+
+    it("DELETE one dialogue", (done) => {
+      chai
+        .request(server)
+        .delete(`/dialogues/${firstDialogueId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.should.be.eq(firstDialogueId);
+          done();
+        });
+    });
+
+    it("READ dialogues - One result.", (done) => {
+      chai
+        .request(server)
+        .get("/dialogues")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(1);
+          firstDialogueId = res.body.data[0]._id;
+          firstDialogueId.length.should.be.eq(24);
+          done();
+        });
+    });
+
+
+  });
 
   /*
    * Expressions - Delete
    */
   describe("/expressions DELETE", () => {
+
+    it("DELETE one Expression - FAIL: Invalid expression id", (done) => {
+      chai
+        .request(server)
+        .delete(`/expressions/AAA57b593c224c77a986569`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid expression id");
+          done();
+        });
+    });
+
+    it("DELETE one Expression - FAIL: Expression does not exist", (done) => {
+      chai
+        .request(server)
+        .delete(`/expressions/699c1ba5f75450cbcaecebdb`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Expression does not exist");
+          done();
+        });
+    });
+
     it("DELETE one expression", (done) => {
       chai
         .request(server)
@@ -794,6 +947,32 @@ describe("API unit and integration tests", () => {
    * Words - Delete
    */
   describe("/words DELETE", () => {
+    it("DELETE one Word - FAIL: Invalid word id", (done) => {
+      chai
+        .request(server)
+        .delete(`/words/AAA57b593c224c77a986569`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid word id");
+          done();
+        });
+    });
+
+    it("DELETE one Word - FAIL: Word does not exist", (done) => {
+      chai
+        .request(server)
+        .delete(`/words/699c1ba5f75450cbcaecebdb`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Word does not exist");
+          done();
+        });
+    });
+
     it("DELETE one word", (done) => {
       chai
         .request(server)
@@ -826,6 +1005,32 @@ describe("API unit and integration tests", () => {
   /*
    * Correspondents - Delete
    */
+  it("DELETE one Correspondent - FAIL: Invalid correspondent id", (done) => {
+    chai
+      .request(server)
+      .delete(`/correspondents/AAA57b593c224c77a986569`)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        res.body.error.should.be.a("string");
+        res.body.error.should.be.eql("Invalid correspondent id");
+        done();
+      });
+  });
+
+  it("DELETE one Correspondent - FAIL: Correspondent does not exist", (done) => {
+    chai
+      .request(server)
+      .delete(`/correspondents/699c1ba5f75450cbcaecebdb`)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        res.body.error.should.be.a("string");
+        res.body.error.should.be.eql("Correspondent does not exist");
+        done();
+      });
+  });
+
   describe("/correspondents DELETE", () => {
     it("DELETE one correspondent", (done) => {
       chai

@@ -139,6 +139,10 @@ exports.update = async (id, data) => {
 };
 
 exports.deleteOne = async (id) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid dialogue id");
+  }
+  
   // 1. check if dialogue exists
   const dialogue = await Dialogue.findById(id);
   

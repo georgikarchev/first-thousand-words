@@ -25,7 +25,7 @@ exports.getOne = async (req, res) => {
     const result = await wordService.getById(id);
     res.status(200).json(result);
   } catch (error) {
-    res.status(404).json({ error: getErrorMessage(error) });
+    res.status(400).json({ error: getErrorMessage(error) });
   }
 };
 
@@ -54,7 +54,7 @@ exports.deleteOne = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    res.status(404).json({ error: getErrorMessage(error) });
+    res.status(400).json({ error: getErrorMessage(error) });
   }
 };
 

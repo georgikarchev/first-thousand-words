@@ -26,7 +26,7 @@ exports.getOne = async (req, res) => {
     const result = await expressionService.getById(id);
     res.status(200).json(result);
   } catch (error) {
-    res.status(404).json({ error: getErrorMessage(error) });
+    res.status(400).json({ error: getErrorMessage(error) });
   }
 };
 
@@ -48,13 +48,12 @@ exports.createOne = async (req, res) => {
 
 exports.deleteOne = async (req, res) => {
   const id = req.params.id;
-
   try {
     const result = await expressionService.deleteOne(id);
-
+    
     res.status(200).json(result);
   } catch (error) {
-    res.status(404).json({ error: getErrorMessage(error) });
+    res.status(400).json({ error: getErrorMessage(error) });
   }
 };
 

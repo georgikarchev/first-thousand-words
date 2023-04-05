@@ -1,8 +1,9 @@
 const Expression = require("../models/Expression");
 const Text = require("../models/Text");
-const Dialog = require("../models/Dialogue");
+const Dialogue = require("../models/Dialogue");
 const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
 const { isValidMongoId } = require("../utils/validators");
+const { default: mongoose } = require("mongoose");
 
 exports.getMany = async (query) => {
   let qry = {};
@@ -54,7 +55,7 @@ exports.getById = async (id) => {
   const expression = await Expression.findById(id).lean();
 
   if (!expression) {
-    throw new Error("Expression does not exist.");
+    throw new Error("Expression does not exist");
   }
 
   return expression;
@@ -124,20 +125,32 @@ exports.update = async (id, data) => {
 };
 
 exports.deleteOne = async (id) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid expression id");
+  }
+  
   // 1. check if expression exists
   const expression = await Expression.findById(id);
   
   if (!expression) {
-    throw new Error("Expression does not exist.");
+    throw new Error("Expression does not exist");
   }
 
   // 2. check if expression is used in Dialogs and Texts
   // TODO: check if expression is used in Dialogs and Texts - if Yes - Output Error "Cant't delete."
-  let isInUse = await Text.find({"expressions": { expression: id }});
-  isInUse = isInUse.length !== 0 ? await Dialog.find({"expressions": { expression: id }}) : false;
+  // let isInUse = await Text.find({"expressions": { expression: id }});
+  // isInUse = isInUse.length !== 0 ? await Dialogue.find({"expressions": { expression: id }}) : false;
+  
+
+  let isInUse = await Dialogue.find({"expressions.expression": {$eq: mongoose.Bson.ObjectId.Parse("642c325e91e0513e58c10f28")}});
+
+  // const mongoId = await mongoose.Types.ObjectId.Parse(id);
+  // const exFound = await Dialog.find();
+  // console.log("--->", exFound);
+
 
   if (isInUse.length === 0) {
-    throw new Error("Expression can't be deleted because it is being used.");
+    throw new Error("Being used");
   }
 
   return await Expression.findByIdAndDelete(id).lean();

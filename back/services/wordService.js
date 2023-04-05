@@ -55,7 +55,7 @@ exports.getById = async (id) => {
   const word = await Word.findById(id).lean();
 
   if (!word) {
-    throw new Error("Word does not exist.");
+    throw new Error("Word does not exist");
   }
 
   return word;
@@ -120,6 +120,10 @@ exports.update = async (id, data) => {
 };
 
 exports.deleteOne = async (id) => {
+  if (!isValidMongoId(id)) {
+    throw new Error("Invalid word id");
+  }
+
   // 1. check if word exists
   const word = await Word.findById(id);
 
