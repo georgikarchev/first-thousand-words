@@ -1,14 +1,15 @@
 process.env.NODE_ENV = "test";
 
 const Word = require("../models/Word");
+const Expression = require("../models/Expression");
+const Correspondent = require("../models/Correspondent");
+const Dialogue = require("../models/Dialogue");
+const Text = require("../models/Text");
 
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 
 const server = require("../index");
-const Expression = require("../models/Expression");
-const Correspondent = require("../models/Correspondent");
-const Dialogue = require("../models/Dialogue");
 
 const should = chai.should();
 // Set up the chai Http assertion library
@@ -42,10 +43,17 @@ describe("API unit and integration tests", () => {
     });
   });
 
+  before((done) => {
+    Text.deleteMany({}, (err) => {
+      done();
+    });
+  });
+
   let firstWordId, secondWordId;
   let firstExpressionId, secondExpressionId;
   let firstCorrespondentId, secondCorrespondentId;
   let firstDialogueId, secondDialogueId;
+  let firstTextId, secondTextId;
 
 
   /*
@@ -813,6 +821,195 @@ describe("API unit and integration tests", () => {
     });
   
   });
+
+
+
+  /*
+   * Texts
+   */
+  describe("/texts Create Read Update (CRU)", () => {
+    it("READ text - No results.", (done) => {
+      chai
+        .request(server)
+        .get("/texts")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(0);
+          done();
+        });
+    });
+
+    it("CREATE a text with the first found expression", (done) => {
+      chai
+        .request(server)
+        .post("/texts")
+        .send({
+          expressions: [firstExpressionId],
+        })
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          res.body.expressions.should.be.a("array");
+          res.body.expressions[0].should.be.eql(firstExpressionId);
+          res.body.language.should.be.eql("english");
+          res.body.published.should.be.eql(false);
+          should.not.exist(res.body.description);
+          should.not.exist(res.body.notes);
+          should.not.exist(res.body.modified);
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          done();
+        });
+    });
+
+    it("CREATE 2nd text with the 2nd found word", (done) => {
+      chai
+        .request(server)
+        .post("/texts")
+        .send({
+          expressions: [secondExpressionId],
+        })
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          res.body.expressions.should.be.a("array");
+          res.body.expressions[0].should.be.eql(secondExpressionId);
+          res.body.language.should.be.eql("english");
+          res.body.published.should.be.eql(false);
+          should.not.exist(res.body.description);
+          should.not.exist(res.body.notes);
+          should.not.exist(res.body.modified);
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          done();
+        });
+    });
+
+    it("READ texts - Two results.", (done) => {
+      chai
+        .request(server)
+        .get("/texts")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(2);
+
+          firstTextId = res.body.data[0]._id;
+          secondTextId = res.body.data[1]._id;
+
+          firstTextId.length.should.be.eq(24);
+          secondTextId.length.should.be.eq(24);
+
+          done();
+        });
+    });
+
+    it("READ single text", (done) => {
+      chai
+        .request(server)
+        .get(`/texts/${firstTextId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          res.body._id.should.be.eq(firstTextId);
+          done();
+        });
+    });
+
+    it("READ single text - FAIL: Invalid text id", (done) => {
+      chai
+        .request(server)
+        .get(`/texts/AAA57b593c224c77a986569`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Invalid text id");
+          done();
+        });
+    });
+
+    it("UPDATE text - FAIL: Bad input", (done) => {
+      chai
+        .request(server)
+        .put(`/texts/${firstTextId}`)
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Bad input");
+          done();
+        });
+    });
+
+    it("UPDATE text - FAIL 2 - Bad input", (done) => {
+      chai
+        .request(server)
+        .put(`/texts/${firstTextId}`)
+        .send({
+          expressions: "not an array",
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Bad input");
+          done();
+        });
+    });
+
+    it("UPDATE texts - FAIL: texts does not exist", (done) => {
+      chai
+        .request(server)
+        .put(`/texts/14257b593c224c77a9865698`)
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Text does not exist");
+          done();
+        });
+    });
+
+    it("UPDATE text - SUCCESS", (done) => {
+      const newExpressions = [firstExpressionId, secondExpressionId];
+
+      chai
+        .request(server)
+        .put(`/texts/${firstTextId}`)
+        .send({
+          expressions: newExpressions,
+          language: "german",
+          published: "true",
+          description: "updated test description",
+          notes: "updated test notes",
+        })
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          res.body.expressions[0].should.be.eql(firstExpressionId);
+          res.body.expressions[1].should.be.eql(secondExpressionId);
+          res.body.language.should.be.eql("german");
+          res.body.published.should.be.eql(true);
+          res.body.description.should.be.eql("updated test description");
+          res.body.notes.should.be.eql("updated test notes");
+          res.body._id.should.be.a("string");
+          res.body._id.length.should.be.eq(24);
+          res.body._id.should.be.eq(firstTextId);
+          done();
+        });
+    });
+  
+  });
+
+
 
   /*
    * Words, Correspondents, Expressions - Delete FAIL: Being used
