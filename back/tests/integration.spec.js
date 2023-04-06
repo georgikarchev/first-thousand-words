@@ -1015,7 +1015,33 @@ describe("API unit and integration tests", () => {
    * Words, Correspondents, Expressions - Delete FAIL: Being used
    */
   describe("/words, /correspondents, /expressions Words, Correspondents, Expressions - Delete FAIL: Being used", () => {
-    it("DELETE one Expression - FAIL: Expression does not exist", (done) => {
+    it("DELETE one Word - FAIL: Being used", (done) => {
+      chai
+        .request(server)
+        .delete(`/words/${firstWordId}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Being used");
+          done();
+        });
+    });
+
+    it("DELETE one Correspondent - FAIL: Being used", (done) => {
+      chai
+        .request(server)
+        .delete(`/correspondents/${firstCorrespondentId}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.error.should.be.a("string");
+          res.body.error.should.be.eql("Being used");
+          done();
+        });
+    });
+    
+    it("DELETE one Expression - FAIL: Being used", (done) => {
       chai
         .request(server)
         .delete(`/expressions/${firstExpressionId}`)
