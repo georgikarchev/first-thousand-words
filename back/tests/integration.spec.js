@@ -1090,6 +1090,32 @@ describe("API unit and integration tests", () => {
         });
     });
 
+    it("DELETE another dialogue", (done) => {
+      chai
+        .request(server)
+        .delete(`/dialogues/${firstDialogueId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.should.be.eq(firstDialogueId);
+          done();
+        });
+    });
+
+    it("READ dialogues - 0 results", (done) => {
+      chai
+        .request(server)
+        .get("/dialogues")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(0);
+          done();
+        });
+    });
+
 
   });
 
@@ -1152,6 +1178,32 @@ describe("API unit and integration tests", () => {
         });
     });
 
+    it("DELETE another text", (done) => {
+      chai
+        .request(server)
+        .delete(`/texts/${firstTextId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.should.be.eq(firstTextId);
+          done();
+        });
+    });
+
+    it("READ texts - 0 result.", (done) => {
+      chai
+        .request(server)
+        .get("/texts")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(0);
+          done();
+        });
+    });
+
 
   });
 
@@ -1195,6 +1247,32 @@ describe("API unit and integration tests", () => {
           res.body.should.be.a("object");
           res.body._id.should.be.a("string");
           res.body._id.should.be.eq(firstExpressionId);
+          done();
+        });
+    });
+
+    it("DELETE another expression", (done) => {
+      chai
+        .request(server)
+        .delete(`/expressions/${secondExpressionId}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body._id.should.be.a("string");
+          res.body._id.should.be.eq(secondExpressionId);
+          done();
+        });
+    });
+
+    it("READ expression - No results.", (done) => {
+      chai
+        .request(server)
+        .get("/expressions")
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(0);
           done();
         });
     });

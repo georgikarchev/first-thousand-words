@@ -3,7 +3,6 @@ const Text = require("../models/Text");
 const Dialogue = require("../models/Dialogue");
 const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
 const { isValidMongoId } = require("../utils/validators");
-const { mongoose } = require("mongoose");
 
 exports.getMany = async (query) => {
   let qry = {};
@@ -83,13 +82,13 @@ exports.update = async (id, data) => {
   if (!isValidMongoId(id)) {
     throw new Error("Invalid expression id");
   }
-  
+
   const expression = await Expression.findById(id);
-  
+
   if (!expression) {
     throw new Error("Expression does not exist");
   }
-  
+
   const newData = removeEmptyAttributes(data);
 
   if (newData.words) {
@@ -128,17 +127,23 @@ exports.deleteOne = async (id) => {
   if (!isValidMongoId(id)) {
     throw new Error("Invalid expression id");
   }
-  
+
   // 1. check if expression exists
   const expression = await Expression.findById(id);
-  
+
   if (!expression) {
     throw new Error("Expression does not exist");
   }
 
   // 2. check if expression is used in Dialogs and Texts
   //mongoose.Bson.ObjectId.Parse()
-  let isInUse = await Dialogue.find({"expressions.expression": {$eq: id}});
+  let isInUse = await Dialogue.find({
+    "expressions.expression": { $eq: id },
+  }).lean();
+
+  if (isInUse.length === 0) {
+    isInUse = await Text.find({ expressions: { $eq: id } });
+  }
 
   if (isInUse.length !== 0) {
     throw new Error("Being used");
@@ -148,11 +153,11 @@ exports.deleteOne = async (id) => {
 };
 
 exports.findExpressionsWithWord = async (wordId) => {
-  if(!isValidMongoId(wordId)) {
+  if (!isValidMongoId(wordId)) {
     throw new Error("Invalid word id");
   }
 
-  const expressions = await Expression.find({words: wordId});
-  
+  const expressions = await Expression.find({ words: wordId });
+
   return expressions;
 };
