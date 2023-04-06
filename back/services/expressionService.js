@@ -3,7 +3,7 @@ const Text = require("../models/Text");
 const Dialogue = require("../models/Dialogue");
 const { removeEmptyAttributes, isEmpty } = require("../utils/jsUtils");
 const { isValidMongoId } = require("../utils/validators");
-const { default: mongoose } = require("mongoose");
+const { mongoose } = require("mongoose");
 
 exports.getMany = async (query) => {
   let qry = {};
@@ -137,19 +137,10 @@ exports.deleteOne = async (id) => {
   }
 
   // 2. check if expression is used in Dialogs and Texts
-  // TODO: check if expression is used in Dialogs and Texts - if Yes - Output Error "Cant't delete."
-  // let isInUse = await Text.find({"expressions": { expression: id }});
-  // isInUse = isInUse.length !== 0 ? await Dialogue.find({"expressions": { expression: id }}) : false;
-  
+  //mongoose.Bson.ObjectId.Parse()
+  let isInUse = await Dialogue.find({"expressions.expression": {$eq: id}});
 
-  let isInUse = await Dialogue.find({"expressions.expression": {$eq: mongoose.Bson.ObjectId.Parse("642c325e91e0513e58c10f28")}});
-
-  // const mongoId = await mongoose.Types.ObjectId.Parse(id);
-  // const exFound = await Dialog.find();
-  // console.log("--->", exFound);
-
-
-  if (isInUse.length === 0) {
+  if (isInUse.length !== 0) {
     throw new Error("Being used");
   }
 
