@@ -132,17 +132,9 @@ exports.deleteOne = async (id) => {
   }
 
   // 2. check if word is used in Expressions, Dialogs and Texts
-  // TODO: check if word is used in Expressions, Dialogs and Texts - if Yes - Output Error "Cant't delete."
-  // const expressionsWithThatWord = await expressionService.findExpressionsWithWord(id);
-
-  // if (expressionsWithThatWord) {
-  //   console.log('---->tuk', expressionsWithThatWord);
-  //   throw new Error("Word can't be deleted because it is being used.");
-  // }
-
   const expressionsWithThatWord = await Expression.find({ words: id }).lean();
   if (expressionsWithThatWord.length !== 0) {
-    throw new Error("Word can't be deleted because it is being used.");
+    throw new Error("Being used");
   }
 
   return await Word.findByIdAndDelete(id);
