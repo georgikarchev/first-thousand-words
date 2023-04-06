@@ -1014,7 +1014,7 @@ describe("API unit and integration tests", () => {
   /*
    * Words, Correspondents, Expressions - Delete FAIL: Being used
    */
-  describe("/words, /correspondents, /expressions Words, Correspondents, Expressions - Delete FAIL: Being used", () => {
+  describe("/words, /correspondents, /expressions - Delete FAIL: Being used", () => {
     it("DELETE one Word - FAIL: Being used", (done) => {
       chai
         .request(server)
