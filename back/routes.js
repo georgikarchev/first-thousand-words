@@ -4,6 +4,7 @@ const wordController = require("./controllers/wordController");
 const expressionController = require("./controllers/expressionController");
 const correspondentController = require("./controllers/correspondentController");
 const dialogueController = require("./controllers/dialogueController");
+const textController = require("./controllers/textController");
 
 // *** WORDS ***
 router.get("/words", wordController.getMany);
@@ -32,6 +33,13 @@ router.get("/dialogues/:id", dialogueController.getOne);
 router.post("/dialogues", dialogueController.createOne);
 router.put("/dialogues/:id", dialogueController.updateOne);
 router.delete("/dialogues/:id", dialogueController.deleteOne);
+
+// *** Texts ***
+router.get("/texts", textController.getMany);
+router.get("/texts/:id", textController.getOne);
+router.post("/texts", textController.createOne);
+router.put("/texts/:id", textController.updateOne);
+router.delete("/texts/:id", textController.deleteOne);
 
 
 // custom 404
