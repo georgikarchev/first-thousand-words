@@ -7,10 +7,8 @@ const textSchema = new mongoose.Schema({
   },
   expressions: [
     {
-      expression: {
-        type: mongoose.Types.ObjectId,
-        ref: "Expression",
-      },
+      type: mongoose.Types.ObjectId,
+      ref: "Expression",
     },
   ],
   published: {
