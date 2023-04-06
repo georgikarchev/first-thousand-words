@@ -90,7 +90,7 @@ exports.update = async (id, data) => {
   if (newData.sex) {
     dialogue.sex = newData.sex;
   }
-  
+
   if (newData.language) {
     dialogue.language = newData.language;
   }
@@ -128,11 +128,12 @@ exports.deleteOne = async (id) => {
   }
 
   // 2. Check if correspondent is used in a dialogue
-  const dialoguesWithThatCorrespondent = await Dialogue.find({
-    expressions: { correspondent: id },
+  let isInUse = await Dialogue.find({
+    "expressions.correspondent": { $eq: id },
   }).lean();
-  if (dialoguesWithThatCorrespondent.length !== 0) {
-    throw new Error("Correspondent can't be deleted because it is being used");
+
+  if (isInUse.length !== 0) {
+    throw new Error("Being used");
   }
 
   return await Correspondent.findByIdAndDelete(id).lean();
