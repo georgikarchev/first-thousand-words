@@ -5,6 +5,9 @@ const textSchema = new mongoose.Schema({
     type: String,
     default: "english",
   },
+  title: {
+    type: String,
+  },
   expressions: [
     {
       type: mongoose.Types.ObjectId,
