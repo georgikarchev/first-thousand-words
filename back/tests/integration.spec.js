@@ -17,8 +17,6 @@ chai.use(chaiHttp);
 
 // TESTS
 describe("API unit and integration tests", () => {
-
-
   before((done) => {
     Word.deleteMany({}, (err) => {
       done();
@@ -54,7 +52,6 @@ describe("API unit and integration tests", () => {
   let firstCorrespondentId, secondCorrespondentId;
   let firstDialogueId, secondDialogueId;
   let firstTextId, secondTextId;
-
 
   /*
    * Words
@@ -281,7 +278,6 @@ describe("API unit and integration tests", () => {
         });
     });
 
-
     it("CREATE an expression with the first found word", (done) => {
       chai
         .request(server)
@@ -300,7 +296,6 @@ describe("API unit and integration tests", () => {
         });
     });
 
-
     it("CREATE 2nd expression with the 2nd found word", (done) => {
       chai
         .request(server)
@@ -318,7 +313,6 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-
 
     it("READ expressions - Two results.", (done) => {
       chai
@@ -406,7 +400,7 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-    
+
     it("UPDATE expressions - FAIL: Expression does not exist", (done) => {
       chai
         .request(server)
@@ -449,13 +443,10 @@ describe("API unit and integration tests", () => {
     });
   });
 
-
   /*
    * Correspondents
    */
   describe("/correspondents Create Read Update (CRU)", () => {
-
-
     it("READ correspondent - No results.", (done) => {
       chai
         .request(server)
@@ -468,7 +459,6 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-
 
     it("CREATE a correspondent", (done) => {
       chai
@@ -488,14 +478,13 @@ describe("API unit and integration tests", () => {
         });
     });
 
-
     it("CREATE 2nd correspondent", (done) => {
       chai
         .request(server)
         .post("/correspondents")
         .send({
           name: "Amy",
-          sex: "female"
+          sex: "female",
         })
         .end((err, res) => {
           res.should.have.status(201);
@@ -507,7 +496,6 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-
 
     it("READ correspondents - Two results.", (done) => {
       chai
@@ -616,8 +604,6 @@ describe("API unit and integration tests", () => {
     });
   });
 
-
-
   /*
    * Dialogues
    */
@@ -640,10 +626,12 @@ describe("API unit and integration tests", () => {
         .request(server)
         .post("/dialogues")
         .send({
-          expressions: [{
-            expression: firstExpressionId,
-            correspondent: firstCorrespondentId
-          }],
+          expressions: [
+            {
+              expression: firstExpressionId,
+              correspondent: firstCorrespondentId,
+            },
+          ],
         })
         .end((err, res) => {
           res.should.have.status(201);
@@ -665,10 +653,12 @@ describe("API unit and integration tests", () => {
         .request(server)
         .post("/dialogues")
         .send({
-          expressions: [{
-            expression: secondExpressionId,
-            correspondent: secondCorrespondentId
-          }],
+          expressions: [
+            {
+              expression: secondExpressionId,
+              correspondent: secondCorrespondentId,
+            },
+          ],
         })
         .end((err, res) => {
           res.should.have.status(201);
@@ -751,9 +741,11 @@ describe("API unit and integration tests", () => {
         .request(server)
         .put(`/dialogues/${firstDialogueId}`)
         .send({
-          expressions: [{
-            expression: secondExpressionId
-          }],
+          expressions: [
+            {
+              expression: secondExpressionId,
+            },
+          ],
         })
         .end((err, res) => {
           res.should.have.status(400);
@@ -782,12 +774,12 @@ describe("API unit and integration tests", () => {
       const newExpressions = [
         {
           expression: firstExpressionId,
-          correspondent: firstCorrespondentId
+          correspondent: firstCorrespondentId,
         },
         {
           expression: secondExpressionId,
-          correspondent: secondCorrespondentId
-        }
+          correspondent: secondCorrespondentId,
+        },
       ];
 
       chai
@@ -806,9 +798,13 @@ describe("API unit and integration tests", () => {
           res.should.have.status(201);
           res.body.should.be.a("object");
           res.body.expressions[0].expression.should.be.eql(firstExpressionId);
-          res.body.expressions[0].correspondent.should.be.eql(firstCorrespondentId);
+          res.body.expressions[0].correspondent.should.be.eql(
+            firstCorrespondentId
+          );
           res.body.expressions[1].expression.should.be.eql(secondExpressionId);
-          res.body.expressions[1].correspondent.should.be.eql(secondCorrespondentId);
+          res.body.expressions[1].correspondent.should.be.eql(
+            secondCorrespondentId
+          );
           res.body.language.should.be.eql("german");
           res.body.published.should.be.eql(true);
           res.body.description.should.be.eql("updated test description");
@@ -819,10 +815,7 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-  
   });
-
-
 
   /*
    * Texts
@@ -842,15 +835,19 @@ describe("API unit and integration tests", () => {
     });
 
     it("CREATE a text with the first found expression", (done) => {
+      const newTitle = "Text 1 title";
       chai
         .request(server)
         .post("/texts")
         .send({
+          title: newTitle,
           expressions: [firstExpressionId],
         })
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.be.a("object");
+          res.body.title.should.be.a("string");
+          res.body.title.should.be.eql(newTitle);
           res.body.expressions.should.be.a("array");
           res.body.expressions[0].should.be.eql(firstExpressionId);
           res.body.language.should.be.eql("english");
@@ -865,15 +862,20 @@ describe("API unit and integration tests", () => {
     });
 
     it("CREATE 2nd text with the 2nd found word", (done) => {
+      const newTitle = "Text 1 title";
+
       chai
         .request(server)
         .post("/texts")
         .send({
+          title: newTitle,
           expressions: [secondExpressionId],
         })
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.be.a("object");
+          res.body.title.should.be.a("string");
+          res.body.title.should.be.eql(newTitle);
           res.body.expressions.should.be.a("array");
           res.body.expressions[0].should.be.eql(secondExpressionId);
           res.body.language.should.be.eql("english");
@@ -1006,10 +1008,7 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-  
   });
-
-
 
   /*
    * Words, Correspondents, Expressions - Delete FAIL: Being used
@@ -1040,7 +1039,7 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-    
+
     it("DELETE one Expression - FAIL: Being used", (done) => {
       chai
         .request(server)
@@ -1054,9 +1053,6 @@ describe("API unit and integration tests", () => {
         });
     });
   });
-  
-
-  
 
   /*
    * Dialogues - Delete
@@ -1141,11 +1137,8 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-
-
   });
 
-  
   /*
    * Texts - Delete
    */
@@ -1229,15 +1222,12 @@ describe("API unit and integration tests", () => {
           done();
         });
     });
-
-
   });
 
   /*
    * Expressions - Delete
    */
   describe("/expressions DELETE", () => {
-
     it("DELETE one Expression - FAIL: Invalid expression id", (done) => {
       chai
         .request(server)
@@ -1421,7 +1411,4 @@ describe("API unit and integration tests", () => {
         });
     });
   });
-
-
-
 });
