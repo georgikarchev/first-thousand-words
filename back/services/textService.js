@@ -50,7 +50,15 @@ exports.getById = async (id) => {
     throw new Error("Invalid text id");
   }
 
-  const text = await Text.findById(id).lean();
+  const text = await Text
+    .findById(id)
+    .populate({
+      path : 'expressions',
+      populate : {
+        path : 'words'
+      }
+    })
+    .lean();
 
   if (!text) {
     throw new Error("Text does not exist.");
