@@ -52,7 +52,16 @@ exports.getById = async (id) => {
     throw new Error("Invalid dialogue id");
   }
 
-  const dialogue = await Dialogue.findById(id).lean();
+  const dialogue = await Dialogue
+    .findById(id)
+    .populate({
+      path : 'expressions.expression',
+      populate : {
+        path : 'words'
+      }
+    })
+    .populate('expressions.correspondent')
+    .lean();
 
   if (!dialogue) {
     throw new Error("Dialogue does not exist.");
