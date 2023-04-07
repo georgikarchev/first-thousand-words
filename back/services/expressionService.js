@@ -43,7 +43,7 @@ exports.getMany = async (query) => {
     .sort(qry.sort)
     .skip(qry.skip)
     .limit(qry.limit)
-    .populate(words)
+    .populate("words")
     .lean();
   return result;
 };
@@ -53,7 +53,7 @@ exports.getById = async (id) => {
     throw new Error("Invalid expression id");
   }
 
-  const expression = await Expression.findById(id).populate(words).lean();
+  const expression = await Expression.findById(id).populate("words").lean();
 
   if (!expression) {
     throw new Error("Expression does not exist");
