@@ -38,6 +38,6 @@ const dialogSchema = new mongoose.Schema({
   },
 });
 
-const Dialog = mongoose.model("Dialog", dialogSchema);
+const Dialogue = mongoose.model("Dialogue", dialogSchema);
 
-module.exports = Dialog;
+module.exports = Dialogue;

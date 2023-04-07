@@ -619,7 +619,7 @@ describe("API unit and integration tests", () => {
 
 
   /*
-   * Dialogs
+   * Dialogues
    */
   describe("/dialogues Create Read Update (CRU)", () => {
     it("READ dialogue - No results.", (done) => {
@@ -1059,7 +1059,7 @@ describe("API unit and integration tests", () => {
   
 
   /*
-   * Dialogs - Delete
+   * Dialogues - Delete
    */
   describe("/dialogues DELETE", () => {
     it("DELETE one dialogue - FAIL: Invalid dialogue id", (done) => {
