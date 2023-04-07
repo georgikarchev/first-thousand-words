@@ -53,7 +53,7 @@ exports.getById = async (id) => {
     throw new Error("Invalid expression id");
   }
 
-  const expression = await Expression.findById(id).lean();
+  const expression = await Expression.findById(id).populate(words).lean();
 
   if (!expression) {
     throw new Error("Expression does not exist");
