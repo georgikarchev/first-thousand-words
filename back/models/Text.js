@@ -7,6 +7,7 @@ const textSchema = new mongoose.Schema({
   },
   title: {
     type: String,
+    required: true,
   },
   expressions: [
     {
