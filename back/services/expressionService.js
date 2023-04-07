@@ -8,6 +8,7 @@ exports.getMany = async (query) => {
   let qry = {};
   let result = { data: {}, count: 0 };
 
+  // TODO: count only the documents, which satisfy the search qry
   result.count = await Expression.find({}).countDocuments();
 
   qry.limit = query.limit ? query.limit : 20;
@@ -42,6 +43,7 @@ exports.getMany = async (query) => {
     .sort(qry.sort)
     .skip(qry.skip)
     .limit(qry.limit)
+    .populate(words)
     .lean();
   return result;
 };
