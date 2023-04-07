@@ -31,13 +31,17 @@ exports.getOne = async (req, res) => {
 
 exports.createOne = async (req, res) => {
   try {
-    const { expressions } = req.body;
+    const { expressions, title } = req.body;
 
     if (!expressions) {
       throw new Error("Bad input");
     }
 
-    const result = await textService.create({expressions});
+    if (!title) {
+      throw new Error("Bad input");
+    }
+
+    const result = await textService.create({expressions, title});
 
     res.status(201).json(result);
   } catch (error) {

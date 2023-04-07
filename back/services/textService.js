@@ -67,10 +67,10 @@ exports.getById = async (id) => {
   return text;
 };
 
-exports.create = async (data, type) => {
-  const { expressions } = data;
+exports.create = async (data) => {
+  const { expressions, title } = data;
 
-  const newText = { expressions: expressions };
+  const newText = { expressions: expressions, title };
   
   if(!expressions.length > 0) {
     throw new Error("Bad input");
