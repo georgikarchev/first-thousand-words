@@ -41,6 +41,12 @@ exports.getMany = async (query) => {
     .sort(qry.sort)
     .skip(qry.skip)
     .limit(qry.limit)
+    .populate({
+      path : 'expressions',
+      populate : {
+        path : 'words'
+      }
+    })
     .lean();
   return result;
 };
