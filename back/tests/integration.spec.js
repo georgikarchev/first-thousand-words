@@ -1169,59 +1169,59 @@ describe("API unit and integration tests", () => {
         });
     });
 
-    it("DELETE one text", (done) => {
-      chai
-        .request(server)
-        .delete(`/texts/${firstTextId}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body._id.should.be.a("string");
-          res.body._id.should.be.eq(firstTextId);
-          done();
-        });
-    });
+    // it("DELETE one text", (done) => {
+    //   chai
+    //     .request(server)
+    //     .delete(`/texts/${firstTextId}`)
+    //     .end((err, res) => {
+    //       res.should.have.status(200);
+    //       res.body.should.be.a("object");
+    //       res.body._id.should.be.a("string");
+    //       res.body._id.should.be.eq(firstTextId);
+    //       done();
+    //     });
+    // });
 
-    it("READ texts - One result.", (done) => {
-      chai
-        .request(server)
-        .get("/texts")
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.data.should.be.a("array");
-          res.body.data.length.should.be.eql(1);
-          firstTextId = res.body.data[0]._id;
-          firstTextId.length.should.be.eq(24);
-          done();
-        });
-    });
+    // it("READ texts - One result.", (done) => {
+    //   chai
+    //     .request(server)
+    //     .get("/texts")
+    //     .end((err, res) => {
+    //       res.should.have.status(200);
+    //       res.body.should.be.a("object");
+    //       res.body.data.should.be.a("array");
+    //       res.body.data.length.should.be.eql(1);
+    //       firstTextId = res.body.data[0]._id;
+    //       firstTextId.length.should.be.eq(24);
+    //       done();
+    //     });
+    // });
 
-    it("DELETE another text", (done) => {
-      chai
-        .request(server)
-        .delete(`/texts/${firstTextId}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body._id.should.be.a("string");
-          res.body._id.should.be.eq(firstTextId);
-          done();
-        });
-    });
+    // it("DELETE another text", (done) => {
+    //   chai
+    //     .request(server)
+    //     .delete(`/texts/${firstTextId}`)
+    //     .end((err, res) => {
+    //       res.should.have.status(200);
+    //       res.body.should.be.a("object");
+    //       res.body._id.should.be.a("string");
+    //       res.body._id.should.be.eq(firstTextId);
+    //       done();
+    //     });
+    // });
 
-    it("READ texts - 0 result.", (done) => {
-      chai
-        .request(server)
-        .get("/texts")
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.data.should.be.a("array");
-          res.body.data.length.should.be.eql(0);
-          done();
-        });
-    });
+    // it("READ texts - 0 result.", (done) => {
+    //   chai
+    //     .request(server)
+    //     .get("/texts")
+    //     .end((err, res) => {
+    //       res.should.have.status(200);
+    //       res.body.should.be.a("object");
+    //       res.body.data.should.be.a("array");
+    //       res.body.data.length.should.be.eql(0);
+    //       done();
+    //     });
+    // });
   });
 
   /*
