@@ -7,37 +7,57 @@
   min-height: 100vh;
   padding: $app-padding-xxl;
   box-sizing: border-box;
-  
-  &-header {
-    & > h1 {
-      text-align: center;
-      font-family: 'Pacifico', cursive;
-      font-size: $app-font-size-xxl;
-      
-      color: $app-color-primary;
-  
-      text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.65);
-      display: inline-block;
-      word-spacing: 100vw;
+}
 
-      margin-bottom: $app-padding-xxl;
-    }
-  }
+.App-header {
+  text-align: center;
 
-  .stats {
-    text-align: center;
-    font-size: $app-font-size-m;
-    color: $app-color-secondary-cold;
-    padding-left: unset;
+  & > h1 {
+    text-align: inherit;
+    font-family: "Pacifico", cursive;
+    font-size: $app-font-size-xxxl;
+
+    color: $app-color-primary;
+
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.65);
+    display: inline-block;
     word-spacing: 100vw;
-    font-weight: 600;
-    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.65);
 
     margin-bottom: $app-padding-xxl;
 
-    & > span {
-      color: $app-color-secondary;
-      font-weight: 700;
-    }
+    transform: rotate(-15deg);
+    transition: font-size 0.2s, width 0.2s,;
+  }
+}
+
+.App.dashboard .App-header {
+  & > h1 {
+    font-size: $app-font-size-l;
+    font-weight: 200;
+    // background-color: $app-color-white;
+    // box-shadow: 0px 1px 5px rgba($app-color-secondary-cold, 0.65);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    display: inline-block;
+    word-spacing: unset;
+    width: min-content;
+    padding: $app-padding-m;
+  }
+}
+
+.stats {
+  text-align: center;
+  font-size: $app-font-size-m;
+  color: $app-color-secondary-cold;
+  padding-left: unset;
+  word-spacing: 100vw;
+  font-weight: 600;
+  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.65);
+
+  margin-bottom: $app-padding-xxl;
+
+  & > span {
+    color: $app-color-secondary;
+    font-weight: 700;
   }
 }
