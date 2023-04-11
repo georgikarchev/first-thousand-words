@@ -1,0 +1,43 @@
+@import "./styles/variables.scss";
+
+.App {
+  margin: 0 auto;
+  width: 100%;
+  max-width: $app-content-max-width;
+  min-height: 100vh;
+  padding: $app-padding-xxl;
+  box-sizing: border-box;
+  
+  &-header {
+    & > h1 {
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      font-size: $app-font-size-xxl;
+      
+      color: $app-color-primary;
+  
+      text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.65);
+      display: inline-block;
+      word-spacing: 100vw;
+
+      margin-bottom: $app-padding-xxl;
+    }
+  }
+
+  .stats {
+    text-align: center;
+    font-size: $app-font-size-m;
+    color: $app-color-secondary-cold;
+    padding-left: unset;
+    word-spacing: 100vw;
+    font-weight: 600;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.65);
+
+    margin-bottom: $app-padding-xxl;
+
+    & > span {
+      color: $app-color-secondary;
+      font-weight: 700;
+    }
+  }
+}
